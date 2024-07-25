@@ -1,0 +1,407 @@
+.option-item {
+  cursor: pointer;
+} 
+
+.ion-text-center {
+  font-weight: bold;
+}
+
+ion-button {
+  margin-bottom: 10px;
+}
+
+.actas-item {
+  cursor: pointer;
+  // text-align: right;
+}
+
+.wrap-collabsible {
+  margin-bottom: 1.2rem 0;
+}
+
+input[type='checkbox'] {
+  display: none;
+}
+
+.lbl-toggle {
+  display: block;
+
+  // font-weight: bold;
+  // font-family: monospace;
+  // font-size: 1.2rem;
+  // text-transform: uppercase;
+  text-align: center;
+
+  padding: 1rem;
+
+  color: white;
+  // background: #FAE042;
+  background: rgb(2,133,62);
+  cursor: pointer;
+
+  border-radius: 7px;
+  transition: all 0.25s ease-out;
+}
+
+.lbl-toggle:hover {
+  // color: #7C5A0B;
+  // background: rgb(2,133,62);
+}
+
+.lbl-toggle::before {
+  content: ' ';
+  display: inline-block;
+
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid currentColor;
+  vertical-align: middle;
+  margin-right: .7rem;
+  transform: translateY(-2px);
+
+  transition: transform .2s ease-out;
+}
+
+.toggle:checked + .lbl-toggle::before {
+  transform: rotate(90deg) translateX(-3px);
+  // transform: rotate(90deg) translate3d(-3px);
+
+}
+
+.collapsible-content {
+  // background: lightslategrey;
+  background: white;
+  max-height: 0px;
+  overflow: hidden;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  transition: max-height .25s ease-in-out;
+}
+
+.toggle:checked + .lbl-toggle + .collapsible-content {
+  max-height: 240vh;
+}
+
+.toggle:checked + .lbl-toggle {
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.info-cliente-card {
+  color: black;
+  .collapsible-content {
+
+    .info-card-content {
+       margin-top: 10px;
+      ion-label {
+        font-size: 16px;
+        font-weight: bold;
+      }
+  
+      .radio-label {
+        font-size: 14px;
+
+        .info-radio {
+          --color-checked	: rgb(2,133,62);
+        }
+      }
+  
+      .info-cliente-medidor-radio-group {
+        margin-left: 10px;
+  
+        ion-radio {
+          margin-left: 5px;
+          margin-right: 10px;
+          vertical-align: middle;
+        }
+      }
+    
+      .info-cam-col1 {
+        text-align: center;
+        padding-bottom: 0px;
+        height: 40px;
+    
+        .info-cam-icon {
+          color: rgb(2,133,62);
+          font-size: 40px;
+        }
+      }
+    
+      .info-cam-col2 {
+        padding-top: 0px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 17px;
+      }
+    }
+  }
+}
+
+.visita-card {
+  color: black;
+
+  .visita-segment {
+    --color-checked: rgb(2,133,62);
+  }
+
+  .date-text {
+    opacity: 1;
+  }
+
+  .visita-text {
+    margin: auto;
+  }
+
+  .visita-btn {
+    opacity: 1;
+  }
+
+  .visita-descripcion {
+    opacity: 1;
+  }
+
+  .visita-radio-group {
+    .visita-estado-text {
+      opacity: 1;
+    }
+
+    ion-radio {
+      vertical-align: middle;
+      --color-checked	: rgb(2,133,62);
+    }
+  }
+
+  .visita-cam-col1 {
+    text-align: center;
+    padding-bottom: 0px;
+    height: 40px;
+
+    .visita-cam-icon {
+      color: rgb(2,133,62);
+      font-size: 40px;
+    }
+  }
+
+  .visita-cam-col2 {
+    padding-top: 0px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 17px;
+  }
+}
+
+.prueba-litraje-card {
+  color: black;
+
+  .prueba-form{
+    margin-top: 5px;
+
+    .prueba-lit-label {
+      opacity: 1;
+    }
+  
+    .prueba-lit-input {
+      margin-left: 5px;
+      text-align: right;
+      .native-input {
+        opacity: 1 !important;
+      }
+    }
+  
+    span {
+      margin-left: 3px;
+      font-size: 15px;
+    }
+    .radio-container {
+      margin-top: 15px;
+      height: 45px;
+      margin-left: 10px;
+      border-bottom: 1px solid lightgrey;
+
+      .radio-grid {
+        padding-right: 0px;
+        padding-left: 0px;
+
+        .radio-col {
+          text-align: right;
+        }
+  
+        .litraje-radio-group {
+          margin-left: 20px;
+    
+          .radio-label {
+            display: inline-flex;
+          }
+    
+          ion-radio {
+            margin-left: 10px;
+            margin-right: 10px;
+            margin-bottom: 0px;
+            --color-checked	: rgb(2,133,62);
+          }
+        }
+      }
+    }
+
+  
+    .dif-text {
+      opacity: 1;
+    }
+  
+    .litraje-small-text {
+      font-size: 15px !important;
+    }
+  } 
+}
+
+.aparatos-card {
+  color: black;
+
+  .title-container {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .aparatos-input {
+    text-align: right;
+  }
+
+  .aparatos-checkbox {
+    --background-checked: rgb(2,133,62);
+    --border-color-checked: rgb(2,133,62);
+  }
+
+  .small-text {
+    font-size: 15px;
+  }
+}
+
+.relacion-defectos-card {
+  color: black;
+
+  .checks-container {
+    text-align: center;
+
+    .checkbox-bottom-label {
+      display: inline-grid;
+      margin-left: 13px;
+      margin-right: 13px;
+    }
+  }
+
+  .control-check {
+    margin: auto;
+    --background-checked: rgb(2,133,62);
+    --border-color-checked: rgb(2,133,62);
+  } 
+
+  .info-icon {
+    font-size: 25px;
+    color: rgb(2,133,62);
+  }
+}
+
+.area-mejora-card {
+  color: black;
+
+  .checks-container {
+    text-align: center;
+
+    .checkbox-bottom-label {
+      display: inline-grid;
+      margin-left: 13px;
+      margin-right: 13px;
+      padding-bottom: 10px;
+    }
+  }
+
+  .control-check {
+    margin: auto;
+    --background-checked: rgb(2,133,62);
+    --border-color-checked: rgb(2,133,62);
+  } 
+
+  .info-icon {
+    color: rgb(2,133,62);
+    font-size: 25px;
+  }
+}
+
+.resultados-card {
+  color: black;
+
+  .title-col {
+    padding-bottom: 0px;
+    .resultado-title {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+  .subtitle-col {
+    padding-top: 0px;
+  }
+
+  .radio-col {
+    text-align: right;
+
+    .resultado-radio-group {
+      margin-left: 15px;
+      ion-radio {
+        margin-left: 5px;
+        margin-right: 10px;
+        vertical-align: middle;
+        --color-checked	: rgb(2,133,62);
+      }
+    }
+  }
+}
+
+.accion-card {
+  color: black;
+
+  .checkbox-bottom-label {
+    opacity: 1;
+  }
+
+  .accion-checkbox {
+    // margin-right: 5px;
+    // vertical-align: middle;
+    --color-checked	: rgb(2,133,62);
+  }
+}
+
+.identificacion-card {
+  color: black;
+
+  .identificacion-label { // doesnt work 
+    opacity: 1;
+  }
+  .label-container {
+    text-align: center;
+    font-weight: bold;
+    font-size: 17px;
+  }
+  .cam-col1 {
+    text-align: center;
+    padding-bottom: 0px;
+    height: 40px;
+
+    .cam-icon {
+      color: rgb(2,133,62);
+      font-size: 40px;
+    }
+  }
+
+  .cam-col2 {
+    padding-top: 0px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .bottom-image-row {
+    border-bottom: solid 2px green;
+  }
+}

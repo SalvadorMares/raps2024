@@ -1,0 +1,138 @@
+<ion-header *ngIf="isLoggedIn">
+  <ion-toolbar class="toolbar">
+    <ion-title class="title-text">
+      <ion-icon *ngIf="showBackBtn" (click)="backBtnPress()" name="arrow-round-back"></ion-icon>
+      <ion-label>Revisión Anual Preventiva</ion-label>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [hidden]="isLoggedIn" id="login-content">
+  <div *ngIf="!hideMainImg" style="background-image: url(assets/green-background-4.jpg);" class="login-container">
+    <div class="main-logo-container">
+      <img class="main-logo-img" src="assets/logo_MexGas.png" alt="mgas-logo">
+    </div>
+    <app-login class="login-component" (isLoggedIn)="onLoggedIn($event)"></app-login>
+  </div>
+</ion-content>
+
+<ion-content class="main-opt-container" [hidden]="!isLoggedIn">
+  <div style="opacity: 1;" class="main-options">
+    <div *ngIf="showMainOptions">
+      <div class="main-logo-container">
+        <img class="main-logo-img" src="assets/logo_MexGas.png" alt="mgas-logo">
+      </div>
+
+      <!-- Capturar acta card -->
+      <ion-card class="acta-card" (click)="capturarActaOption()">
+        <ion-card-header class="main-opt-card-header">
+          <ion-card-title>Captura de Actas</ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="actas-card-content">
+          Busca actas por ubicación y procede a su llenado, en caso de que te encuentres sin conexión a internet estas serán guardadas localmente.
+        </ion-card-content>
+      </ion-card>
+      <!-- End of Capturar acta card -->
+
+      <!-- Pending actas card -->
+      <ion-card class="actas-pendientes-card" (click)="ActasPendientesOption()">
+        <div class="actas-pendientes-badge-container">
+          <ion-badge class="pending-actas-badge" *ngIf="showPendingBadge" slot="end">{{pendingActasNumber}}</ion-badge>
+        </div>
+        <!-- <img src="./madison.jpg" /> -->
+        <ion-card-header class="main-opt-card-header">
+          <!-- <ion-card-subtitle>Destination</ion-card-subtitle> -->
+          <ion-card-title>Actas pendientes de enviar</ion-card-title>
+        </ion-card-header>
+        <ion-card-content class="actas-card-content">
+          En esta sección podrás ver las actas que se encuentren pendientes de enviar, estas serán enviadas automáticamente una vez te conectes a internet.
+        </ion-card-content>
+      </ion-card>
+      <!-- End of Pending actas card -->
+      
+      <!-- <ion-button (click)="printLocalActas()">Print local data!</ion-button>
+      <ion-button (click)="deleteLocalData()">Delete local data!</ion-button> -->
+    </div>
+    
+    <!-- Locations drops -->
+    <section class="locations-container" [hidden]="!showLocationsDrops">
+      <ion-card-header class="locations-drop-card-header">
+        <img class="world-logo-img" src="assets/worldwide.png" alt="mgas-logo">
+        
+        <ion-card-title>Buscar acta</ion-card-title>
+        <ion-card-subtitle>Una vez seleccionados ciudad, colonia y calle aparecera un listado de las actas disponibles para su llenado.</ion-card-subtitle>
+      </ion-card-header>
+
+      <img (click)="clearCiudadSelect()" *ngIf="ciudadDisabled" class="cross-icon" src="assets/cancel.png" alt="clear-searchbar-icon">
+      <ion-searchbar class="ciudad-search-bar" (ionFocus)="showDropList = true" [disabled]="ciudadDisabled" placeholder="Ciudad" value="{{selectedCiudad.descripcion | titlecase}}"></ion-searchbar>
+
+      <img (click)="clearColoniaSelect()" *ngIf="coloniaDisabled" class="cross-icon" src="assets/cancel.png" alt="clear-searchbar-icon">
+      <ion-searchbar class="colonia-search-bar" (ionFocus)="showDropList = true" [disabled]="coloniaDisabled" [hidden]="!showColoniaInput" placeholder="Colonia" value="{{selectedColonia.descripcion | titlecase}}"></ion-searchbar>
+
+      <img (click)="clearCalleSelect()" *ngIf="calleDisabled" class="cross-icon" src="assets/cancel.png" alt="clear-searchbar-icon">
+      <ion-searchbar class="calle-search-bar" (ionFocus)="showDropList = true" [disabled]="calleDisabled" [hidden]="!showCalleInput" placeholder="Calle" value="{{selectedCalle.descripcion | titlecase}}"></ion-searchbar>
+
+      <ion-list class="options-list" [hidden]="!showDropList">
+        <ion-item class="option-item" [hidden]="showColoniaInput" *ngFor="let cd of ciudades" (click)="onCiudadItemClick(cd)">
+          <img class="location-icon" src="assets/pin-map.png" alt="location-list-icon">
+          <ion-label>{{cd.descripcion | titlecase}} ({{cd.totalActas}})</ion-label>
+        </ion-item>
+        <ion-item class="option-item" [hidden]="showCalleInput" *ngFor="let col of coloniasFiltered" (click)="onColoniaItemClick(col)">
+          <img class="location-icon" src="assets/pin-map.png" alt="location-list-icon">
+          <ion-label>{{col.descripcion | titlecase}} ({{col.totalActas}})</ion-label>
+        </ion-item>
+        <ion-item class="option-item" [hidden]="!showCalleInput && !showColoniaInput" *ngFor="let call of callesFiltered" (click)="onCalleItemClick(call)">
+          <img class="location-icon" src="assets/pin-map.png" alt="location-list-icon">
+          <ion-label>{{call.descripcion | titlecase}} ({{call.totalActas}})</ion-label>
+        </ion-item>
+      </ion-list>
+    </section>
+    <!-- End of locations drops -->
+
+    <!-- List of actas -->
+    <section *ngIf="showActasList">
+      <ion-list class="actas-list">
+        <ion-list-header class="actas-list-header">
+          <div class="label-container">
+            <ion-card-title *ngIf="!isPendingActa">
+                Actas Disponibles
+            </ion-card-title>
+            <ion-card-title *ngIf="isPendingActa">
+              Actas pendientes de enviar
+            </ion-card-title>
+            <ion-card-subtitle *ngIf="!isPendingActa" class="subtitle-label">
+              Selecciona un acta de la lista para su llenado, una vez presiones el botón de enviar no podrás realizar cambios a esa acta.
+            </ion-card-subtitle>
+            <ion-card-subtitle *ngIf="isPendingActa" class="subtitle-label">
+              Selecciona un acta para poder visualizarla, no es posible realizar ningún cambio y/o eliminarla.
+            </ion-card-subtitle>
+          </div>
+        </ion-list-header>
+        <ion-item (click)="initActasForm(act)" class="actas-item" *ngFor="let act of actasArrayToShow">
+          <ion-avatar class="list-avatar" slot="start">
+            <ion-icon name="cube"></ion-icon>
+          </ion-avatar>
+          <ion-label>
+            <ion-label class="list-name-label">{{act.nombreCliente | titlecase}}</ion-label>
+            <ion-label class="list-folio-label">Folio: {{act.id}}</ion-label>          
+            <ion-label class="list-dir-label">{{act.direccion | titlecase}}</ion-label>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </section>
+    <!-- End of list of actas -->
+
+    <!-- Acta Form -->
+    <app-acta-form [selectedActa]="selectedActa" [selectedActaMulOpt]="pendingActaOptMul" [selectedActaImages]="pendingActaImages" [isPendingActa]="isPendingActa" (actaSaved)="onActaSaved($event)" (backBtnPress)="onActaBackBtnPress()" *ngIf="showActaForm"> </app-acta-form>
+    <!-- End of Acta Form -->
+  </div>
+  </ion-content>
+  <ion-footer class="landing-footer" *ngIf="isLoggedIn && showMainOptions">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="10" offset="1">
+          <ion-button (click)="logOut()" class="exit-btn" expand="block" color="danger">Salir</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-footer>

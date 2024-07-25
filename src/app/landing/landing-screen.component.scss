@@ -1,0 +1,254 @@
+.toolbar {
+  --background: rgb(246,246,246);
+
+  .tittle-text {
+    text-align: center;
+    background: rgb(246,246,246);
+  }
+
+  ion-title {
+    text-align: center;
+  
+    ion-icon {
+      position: absolute;
+      left: 10px;
+      font-size: 25px;
+    }
+  }
+}
+
+.login-container {
+  // background-image: url('../assets/green-background-4.jpg');
+  background-repeat: no-repeat;
+  background-size:cover;
+  height: 100%;
+  padding-top: 80px;
+  
+  .main-logo-container {
+    height: 170px;
+    width: 100%;
+  
+    .main-logo-img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 40%;
+    }
+  }
+
+  .login-component {
+    margin-top: 25px;
+    opacity: 1;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+  }
+}
+
+
+.main-opt-container {
+  --background: rgb(246,246,246);
+  // height: 100%;
+
+  .main-options {
+    // height: 100%;
+    .main-logo-container {
+      height: 170px;
+      width: 100%;
+    
+      .main-logo-img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 50px;
+        width: 40%;
+      }
+    }
+    
+    .acta-card {
+    
+      .main-opt-card-header {
+        background-color: rgb(2,133,62);
+        height: 40px;
+        text-align: center;
+        padding-top: 7px;
+      }
+    
+      .actas-card-content {
+        font-size: 15px;
+        margin-top: 10px;
+      }
+    }
+    
+    .actas-pendientes-card {
+      overflow: visible;
+  
+      .actas-pendientes-badge-container {
+        text-align: right;
+        height: 0px;
+    
+        .pending-actas-badge {
+          border-radius: 15px;
+          bottom: 10px;
+          height: 25px;
+          left: 10px;
+          position: relative;
+          width: 25px;
+          --padding-end: 5px;
+          --padding-start: 5px;
+          --padding-bottom: 5px;
+          --padding-start: 5px;
+          --padding-top: 5px;
+          z-index: 10;
+        }
+      }
+  
+      .main-opt-card-header {
+        background-color: rgb(2,133,62);
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+        height: 40px;
+        text-align: center;
+        padding-top: 7px;
+      }
+  
+      .actas-card-content {
+        font-size: 15px;
+        margin-top: 10px;
+      }
+    }
+
+    .exit-btn {
+      margin-top: 30px;
+    }
+  }
+}
+
+.locations-container {
+  .locations-drop-card-header {
+    background-color: transparent;
+    text-align: center;
+  }
+
+  .ciudad-search-bar {
+    --icon-color: rgb(16, 19, 16);
+  }
+
+  .options-list {
+    background-color: rgb(246,246,246);
+
+    .option-item {
+      --background: rgb(246,246,246);
+    }
+  }
+}
+
+.actas-list {
+  background-color: rgb(246,246,246);
+
+  .actas-list-header{
+    padding: 0px;
+    margin-top: 15px;
+  
+    .label-container {
+      text-align: center;
+      width: 100%;
+
+      .subtitle-label {
+        margin-top: 10px;
+        margin-bottom: 15px;
+      }
+    }
+  }
+
+  .actas-item {
+    --background: rgb(246,246,246);
+  }
+}
+
+.world-logo-img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  width: 40%;
+}
+
+
+
+.cross-icon {
+  right: 15px;
+  position: absolute;
+  margin-top: 20px;
+  width: 5%;
+  z-index: 1000;
+}
+
+.location-icon {
+  width: 7%;
+}
+
+.list-avatar{
+  text-align: center;
+
+  ion-icon {
+    color: rgb(2,133,62);
+    font-size: 35px;
+  }
+}
+
+.list-name-label {
+  font-weight: bold;
+}
+
+.list-folio-label {
+  color: rgb(115, 115, 115);
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.list-dir-label {
+  color: rgb(115, 115, 115);
+  font-size: 14px;
+}
+
+.list-icon {
+  color: rgb(2,133,62);
+  font-size: 30px;
+  right: 15px;
+  position: absolute;
+  top: 25px;
+  
+}
+
+.landing-footer {
+  background-color: rgb(246,246,246);
+}
+
+.fade-in {
+  opacity: 1 !important;
+  animation: fadeIn ease 1s;
+}
+
+.fade-out {
+  animation: fadeOut ease 1s;
+  opacity: 0;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity:0;
+  }
+  100% {
+    opacity:1;
+  }
+}

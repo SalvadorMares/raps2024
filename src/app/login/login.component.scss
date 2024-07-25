@@ -1,0 +1,52 @@
+.fade-out {
+  animation: fadeOut ease 1s;
+  opacity: 0;
+}
+
+.login-form-container {
+  background-color: gainsboro;
+  // background-color: transparent;
+  border-radius: 5px;
+
+  .login-item {
+    --background: gainsboro;
+    // --background: transparent;
+    // color: white;
+  }
+
+  .login-btn {
+    --background: rgb(2,133,62);
+    border-radius: 5px;
+  } 
+
+  .login-item-content {
+    .icon {
+      font-size: 17px;
+    }
+  }
+  .pass-eye-icon {
+    font-size: 23px;
+    left: 225px;
+    position: absolute;
+    top: 20px;
+  }
+
+  .reset-password-container {
+    text-align: right;
+
+    .reset-password-label {
+      text-decoration: underline;
+      font-size: 11px;
+      font-weight: bold;
+    }
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity:1;
+  }
+  100% {
+    opacity:0;
+  }
+}

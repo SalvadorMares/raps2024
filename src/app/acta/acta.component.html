@@ -1,0 +1,411 @@
+  <section>
+    <!-- informacion del cliente -->
+    <ion-card class="info-cliente-card">
+      <input id="informacion-collaps" class="toggle" type="checkbox" checked>
+      <label for="informacion-collaps" class="lbl-toggle">Identificación del cliente</label>
+      <ion-card-content class="collapsible-content">
+        <div class="info-card-content">
+          <ion-label>Nombre:</ion-label><p>{{selectedActa.nombreCliente | titlecase}}</p>
+          <ion-label>Dirección:</ion-label><p>{{selectedActa.direccion | titlecase}}</p>
+          <ion-label>Colonia:</ion-label><p>{{selectedActa.colonia | titlecase}}</p>
+          <ion-label>Medidor:</ion-label><p>{{selectedActa.numeroMedidor}}</p>
+          <ion-label>ID cliente:</ion-label><p>{{selectedActa.idCliente}}</p>
+          <ion-label class="radio-label">¿Serie de medidor correcta?</ion-label>
+          <ion-radio-group class="info-cliente-medidor-radio-group" [(ngModel)]="selectedActa.medidorCorrecto">
+            <ion-label class="radio-label">Si<ion-radio class="info-radio" [disabled]="isPendingActa" slot="start" [value]="true"></ion-radio></ion-label>
+            <ion-label class="radio-label">No<ion-radio class="info-radio" [disabled]="isPendingActa" slot="start" [value]="false"></ion-radio></ion-label>
+          </ion-radio-group>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <ion-row *ngIf="!isPendingActa">
+                  <ion-col class="info-cam-col1">
+                    <ion-icon alt="" (click)="capture(1)" class="info-cam-icon" name="camera"></ion-icon>              
+                  </ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col class="info-cam-col2">
+                    <ion-label *ngIf="!imagenInfo || isPendingActa">Serie Medidor</ion-label>
+                    <ion-label *ngIf="imagenInfo && !isPendingActa">Volver a tomar fotografía</ion-label>
+                  </ion-col>
+                </ion-row>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <img class="info-image" [src]="imagenInfo" *ngIf="imagenInfo"/>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <ion-button id="infoClientBtn" *ngIf="!isPendingActa" (click)="goToNext(1)" expand="block" color="primary" [disabled]="!imagenInfo">Continuar</ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+    <!-- fin de informacion del cliente -->
+
+    <!-- Visita -->
+    <ion-card class="visita-card">
+      <input id="visita-collaps" class="toggle" type="checkbox">
+      <label for="visita-collaps" class="lbl-toggle">Visita</label>
+      <ion-card-content class="collapsible-content">
+        <ion-segment class="visita-segment" [(ngModel)]="selectedActa.cantidadVisitas">
+          <h2 class="visita-text">Visita:</h2>
+          <ion-segment-button class="visita-btn" value="1" disabled>
+            <p>1</p>
+          </ion-segment-button>
+          <ion-segment-button class="visita-btn" value="2" disabled>
+            <p>2</p>
+          </ion-segment-button>
+          <ion-segment-button class="visita-btn" value="3" disabled>
+            <p>3</p>
+          </ion-segment-button>
+        </ion-segment>
+        <ion-item>
+          <ion-label class="date-text">Fecha</ion-label>
+          <ion-datetime class="date-text" displayFormat="DD/MM/YYYY H:mm" placeholder="dd/mm/aaaa" disabled [(ngModel)]="selectedActa.fechaUltVisitaSinFormato"></ion-datetime>
+        </ion-item>
+        <ion-radio-group class="visita-radio-group" [(ngModel)]="estadoActaOptions.optionSelected">
+          <ion-item *ngFor="let estado of estadoActaOptions.options">
+            <ion-radio class="visita-radio" [disabled]="isPendingActa" (click)="estadoActaOptions.canContinue = estado.canContinue; estadoActaOptions.requirePhoto = estado.requiredPhoto; estadoActaOptions.requireComment = estado.requiredComment" slot="end" value="{{estado.indice}}"></ion-radio>
+            <ion-label class="visita-estado-text">{{estado.valor}}</ion-label>
+          </ion-item>
+        </ion-radio-group>
+        <ion-item>
+          <ion-label class="descripcion-label" position="stacked">Descripción</ion-label>
+          <ion-textarea [disabled]="isPendingActa" [(ngModel)]="selectedActa.observaciones"></ion-textarea>
+        </ion-item>
+        <ion-grid *ngIf="estadoActaOptions.requirePhoto || isPendingActa">
+          <ion-row>
+            <ion-col>
+              <ion-row *ngIf="!isPendingActa">
+                <ion-col class="visita-cam-col1">
+                  <ion-icon (click)="capture(2)" class="visita-cam-icon" name="camera"></ion-icon>              
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="visita-cam-col2">
+                  <ion-label *ngIf="!imagenVisita || (isPendingActa && imagenVisita)">Evidencia ilícito</ion-label>
+                  <ion-label [hidden]="isPendingActa" *ngIf="imagenVisita">Volver a tomar fotografía</ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <img [src]="imagenVisita" *ngIf="imagenVisita"/>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-button (click)="sendRequest(false)" expand="block" color="primary" *ngIf="!isPendingActa && !estadoActaOptions.canContinue" [disabled]="(estadoActaOptions.requireComment && !selectedActa.observaciones) || (estadoActaOptions.requirePhoto && !imagenVisita) || !estadoActaOptions.optionSelected || isSendingActa">Finalizar</ion-button>
+        <ion-button id="visitaBtn" (click)="goToNext(2)" expand="block" color="primary" *ngIf="!isPendingActa && estadoActaOptions.canContinue" [disabled]="!selectedActa.estatus">Continuar</ion-button>
+      </ion-card-content>
+    </ion-card>
+    <!-- Fin de singulares -->
+
+    <!-- Prueba de litraje -->
+    <ion-card class="prueba-litraje-card">
+      <input id="prueba-litrage-collaps" class="toggle" type="checkbox">
+      <label for="prueba-litrage-collaps" class="lbl-toggle">Prueba de Litraje</label>
+      <ion-card-content class="collapsible-content">
+      <form class="prueba-form" #pruebaForm="ngForm">
+        <div class="radio-container">
+          <ion-grid class="radio-grid">
+            <ion-row>
+              <ion-col size="6">
+                <ion-label>¿Medidor funciona?</ion-label>
+              </ion-col>
+              <ion-col size="6" class="radio-col">
+                <ion-radio-group required name="radio" class="litraje-radio-group" [(ngModel)]="selectedActa.medidorFunciona">
+                  <ion-label class="radio-label">Si<ion-radio [disabled]="isPendingActa || !estadoActaOptions.canContinue" slot="start" [value]="true"></ion-radio></ion-label>
+                  <ion-label class="radio-label">No<ion-radio [disabled]="isPendingActa || !estadoActaOptions.canContinue" slot="start" [value]="false"></ion-radio></ion-label>
+                </ion-radio-group>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+        <ion-item>
+          <ion-label class="prueba-lit-label">Duración (A) :</ion-label>
+          <ion-input class="prueba-lit-input" type="number" required name="duracion" [disabled]="isPendingActa || !estadoActaOptions.canContinue"  [(ngModel)]="selectedActa.medidorDuracionMin"></ion-input>
+          <span>min</span>
+        </ion-item>
+        <ion-item>
+          <ion-label class="prueba-lit-label">Flujo = ( 60 / A ) x B :</ion-label>
+          <ion-input class="prueba-lit-input" type="number" required name="flujo" [disabled]="isPendingActa || !estadoActaOptions.canContinue" [(ngModel)]="selectedActa.medidiorFlujoLtHr"></ion-input>
+          <span>lt/hr</span>
+        </ion-item>
+        <ion-item>
+          <p class="litraje-small-text">Lectura INICIAL del medidor :</p>
+          <ion-input class="prueba-lit-input" required name="lecIni" type="number" [disabled]="isPendingActa || !estadoActaOptions.canContinue" [(ngModel)]="selectedActa.lecturaInicial"></ion-input>
+        </ion-item>
+        <ion-item>
+          <p class="litraje-small-text">Lectura FINAL del medidor :</p>
+          <ion-input class="prueba-lit-input" required name="lecFin" type="number" [disabled]="isPendingActa || !estadoActaOptions.canContinue" [(ngModel)]="selectedActa.lecturaFinal"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label class="dif-text">Diferencia (B) :</ion-label>
+          <ion-input class="dif-text" name="dif" disabled [(ngModel)]="selectedActa.diferencia">{{(selectedActa.lecturaFinal ? selectedActa.lecturaFinal : 0) - (selectedActa.lecturaInicial ? selectedActa.lecturaInicial : 0 )}}</ion-input>
+        </ion-item>
+        <ion-button id="pruebaLitBtn" *ngIf="!isPendingActa" (click)="goToNext(3)" expand="block" color="primary" [disabled]="pruebaForm.form.pristine || !pruebaForm.form.valid || selectedActa.lecturaInicial > selectedActa.lecturaFinal">Continuar</ion-button>
+      </form>
+      </ion-card-content>
+    </ion-card>
+    <!-- Fin de prueba de litraje -->
+
+    <!-- Aparatos -->
+    <ion-card class="aparatos-card">
+      <input id="aparatos-collaps" class="toggle" type="checkbox">
+      <label for="aparatos-collaps" class="lbl-toggle">Aparatos</label>
+      <ion-card-content class="collapsible-content">
+        <form #aparatosForm="ngForm">
+          <ion-grid>
+            <ion-row>
+              <ion-col class="title-container">
+                <ion-label>Aparatos de que dispone en la instalacion</ion-label>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-item *ngFor="let apa of aparatosOptions; let i = index;">
+                <ion-label class="small-text">{{apa.valor | titlecase}}</ion-label>
+                <ion-input required class="aparatos-input" placeholder="CO" type="number" name="{{i}}" [disabled]="isPendingActa || !apa.isChecked || aparatosOptionsDisabled" [(ngModel)]="apa.valorNum"></ion-input>
+                <ion-checkbox class="aparatos-checkbox" slot="start" name="check" [disabled]="isPendingActa || !estadoActaOptions.canContinue || aparatosOptionsDisabled" [(ngModel)]="apa.isChecked"></ion-checkbox>
+              </ion-item>
+              <ion-item>
+                <ion-label class="small-text">No Aplica</ion-label>
+                <ion-input class="aparatos-input" type="number" name="aparatoNa" [disabled]="true" ></ion-input>
+                <ion-checkbox [disabled]="isPendingActa || !estadoActaOptions.canContinue" [checked]="isPendingActa"  class="aparatos-checkbox" slot="start" name="checkna" (click)="aparatoNaClick()"></ion-checkbox>
+              </ion-item>
+            </ion-row>
+          </ion-grid>
+          <ion-button id="aparatosBtn" expand="block" color="primary" *ngIf="!isPendingActa && !aparatosOptionsDisabled" (click)="goToNext(4)" [disabled]="aparatosForm.form.pristine || !aparatosForm.form.valid">Continuar</ion-button>
+          <ion-button id="aparatosNaBtn" expand="block" color="primary" *ngIf="!isPendingActa && aparatosOptionsDisabled" (click)="goToNext(4)">Continuar</ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+    <!-- Fin de Aparatos -->
+
+    <!-- Relación de defectos -->
+    <ion-card class="relacion-defectos-card">
+      <input id="relacion-defectos-collaps" class="toggle" type="checkbox">
+      <label for="relacion-defectos-collaps" class="lbl-toggle">Relación de defectos</label>
+      <ion-card-content class="collapsible-content">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="11">
+              <ion-label>Tocar ícono para descripción</ion-label>
+            </ion-col>
+            <ion-col size="1">
+              <ion-icon (click)="openDefectosPopover($event)" class="info-icon" name="information-circle-outline"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <ion-label>Control de hermeticidad</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div class="checks-container">
+                <ion-label *ngFor="let here of controlHermOptions" class="checkbox-bottom-label"><ion-checkbox class="control-check" (click)="updateControlHermForm(here)" [disabled]="isPendingActa || controlHermOptionsDisabled || !estadoActaOptions.canContinue" [(ngModel)]="here.isChecked" [disabled]="controlHermOptionsDisabled"></ion-checkbox>{{here.valor}}</ion-label>          
+                <ion-label class="checkbox-bottom-label" [hidden]="isPendingActa && this.controlHermOptions.length > 0"><ion-checkbox class="control-check" [checked]="isPendingActa" [disabled]="isPendingActa || !estadoActaOptions.canContinue" [hidden]="isPendingActa && this.controlHermOptions.length > 0" (click)="conHermNaClick()"></ion-checkbox>N/A</ion-label>          
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <ion-label>CO diluido</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div class="checks-container">
+                <ion-label *ngFor="let cod of coDiluidoOptions" class="checkbox-bottom-label"><ion-checkbox class="control-check" (click)="updateCoDiluidoForm(cod)" [disabled]="isPendingActa || coDiluidoOptionsDisabled || !estadoActaOptions.canContinue" [(ngModel)]="cod.isChecked" [disabled]="coDiluidoOptionsDisabled"></ion-checkbox>{{cod.valor}}</ion-label>          
+                <ion-label class="checkbox-bottom-label" [hidden]="isPendingActa && this.coDiluidoOptions.length > 0"><ion-checkbox [disabled]="isPendingActa || !estadoActaOptions.canContinue" [checked]="isPendingActa" [hidden]="isPendingActa && this.coDiluidoOptions.length > 0" (click)="codNaClick()" class="control-check"></ion-checkbox>N/A</ion-label>          
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>        
+        <ion-button id="relacionDefBtn" *ngIf="!isPendingActa" (click)="goToNext(5)" expand="block" color="primary" [disabled]="!estadoActaOptions.canContinue || !coDiluidoFormValid || !controlHermFormValid">Continuar</ion-button>
+      </ion-card-content>
+    </ion-card>
+    <!-- Fin de relacion de defectos -->
+
+    <!-- Area de mejora -->
+    <ion-card class="area-mejora-card">
+      <input id="area-mejora-collaps" class="toggle" type="checkbox">
+      <label for="area-mejora-collaps" class="lbl-toggle">Área de mejora</label>
+      <ion-card-content class="collapsible-content">
+        <ion-grid>
+          <ion-row>
+            <ion-col size="11">
+              <ion-label>Tocar ícono para descripción</ion-label>
+            </ion-col>
+            <ion-col size="1">
+              <ion-icon (click)="openMejorasPopover($event)" class="info-icon" name="information-circle-outline"></ion-icon>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <ion-label>Área de mejora (Se recomienda la corrección a la brevedad) en la tubería</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div class="checks-container">
+                <ion-label *ngFor="let areaM of areaMejoraOptions" class="checkbox-bottom-label"><ion-checkbox class="control-check" (click)="updateAreaMejoraForm(areaM)" [disabled]="isPendingActa || areaMejoraOptionsDisabled || !estadoActaOptions.canContinue" [(ngModel)]="areaM.isChecked" [disabled]="areaMejoraOptionsDisabled"></ion-checkbox>{{areaM.valor}}</ion-label>          
+                <ion-label class="checkbox-bottom-label" [hidden]="isPendingActa && this.areaMejoraOptions.length > 0"><ion-checkbox class="control-check" [disabled]="isPendingActa || !estadoActaOptions.canContinue" [checked]="isPendingActa" [hidden]="isPendingActa && this.areaMejoraOptions.length > 0" (click)="areaMejoraNaClick()"></ion-checkbox>N/A</ion-label>          
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <ion-label>En la instalación de los equipos de consumo</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <div class="checks-container">
+                <ion-label *ngFor="let equip of equiposMejoraOptions" class="checkbox-bottom-label"><ion-checkbox class="control-check" (click)="updateEquiposConsumoForm(equip)" [disabled]="isPendingActa || equiposMejoraOptionsDisabled || !estadoActaOptions.canContinue" [(ngModel)]="equip.isChecked" [disabled]="equiposMejoraOptionsDisabled"></ion-checkbox>{{equip.valor}}</ion-label>          
+                <ion-label class="checkbox-bottom-label" [hidden]="isPendingActa && this.equiposMejoraOptions.length > 0"><ion-checkbox class="control-check" [disabled]="isPendingActa || !estadoActaOptions.canContinue" [checked]="isPendingActa" [hidden]="isPendingActa && this.equiposMejoraOptions.length > 0" (click)="eqMejoraNaClick()"></ion-checkbox>N/A</ion-label>          
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-button id="areaMejoraBtn" *ngIf="!isPendingActa" (click)="goToNext(6)" expand="block" color="primary" [disabled]="!estadoActaOptions.canContinue || !areaMejoraFormValid || !equipoConsumoFormValid">Continuar</ion-button>
+      </ion-card-content>
+    </ion-card>
+    <!-- Fin de area de mejora -->
+
+    <!-- Resultados -->
+    <ion-card class="resultados-card">
+      <input id="resultados-collaps" class="toggle" type="checkbox">
+      <label for="resultados-collaps" class="lbl-toggle">Resultados</label>
+      <ion-card-content class="collapsible-content">
+      <form #resultadosForm="ngForm">
+        <ion-grid>
+          <div *ngFor="let area of resultadosOptions">
+            <ion-row>
+              <ion-col class="title-col">
+                <ion-label class="resultado-title">{{area.valor}}</ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="subtitle-col">
+                  <ion-label class="resultado-subtitle">{{area.descripcion}}</ion-label>
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col class="radio-col">
+                  <ion-radio-group required class="resultado-radio-group" [(ngModel)]="area.isChecked" name="{{area.valor}}">
+                    <ion-label>Si<ion-radio [disabled]="isPendingActa || !estadoActaOptions.canContinue" slot="start" value="true"></ion-radio></ion-label>
+                    <ion-label>No<ion-radio [disabled]="isPendingActa || !estadoActaOptions.canContinue" slot="start" value="false"></ion-radio></ion-label>
+                  </ion-radio-group>
+                </ion-col>
+            </ion-row>
+          </div>
+        </ion-grid>
+        <ion-button id="resultadosBtn" *ngIf="!isPendingActa" (click)="goToNext(7)" expand="block" color="primary" [disabled]="!estadoActaOptions.canContinue || resultadosForm.form.invalid">Continuar</ion-button>
+      </form>
+      </ion-card-content>
+    </ion-card>
+    <!-- Fin de resultados -->
+
+    <!-- Acción -->
+    <ion-card class="accion-card">
+      <input id="accion-collaps" class="toggle" type="checkbox">
+      <label for="accion-collaps" class="lbl-toggle">Acción</label>
+      <ion-card-content class="collapsible-content">
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <div>Área de mejora</div>
+              <div>(Se recomienda la corrección a la brevedad)</div>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-radio-group [(ngModel)]="accionesOptions.optionSelected">
+                <ion-item *ngFor="let acc of accionesOptions.options;">
+                  <ion-label class="checkbox-bottom-label">{{acc.valor}}</ion-label>
+                  <ion-radio value="{{acc.indice}}" [disabled]="isPendingActa || !estadoActaOptions.canContinue" class="accion-checkbox"></ion-radio>
+                </ion-item>
+              </ion-radio-group>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-button id="accionBtn" *ngIf="!isPendingActa" (click)="goToNext(8)" expand="block" color="primary" [disabled]="!estadoActaOptions.canContinue || !accionesOptions.optionSelected">Continuar</ion-button>
+      </ion-card-content>
+    </ion-card>
+    <!-- Fin de Acción -->
+
+    <!-- Identificación -->
+    <ion-card class="identificacion-card">
+      <input id="identificacion-collaps" class="toggle" type="checkbox">
+      <label for="identificacion-collaps" class="lbl-toggle">Identificación</label>
+      <ion-card-content class="collapsible-content">
+      <form #identificacionForm="ngForm">
+        <ion-item>
+          <ion-label position="stacked">Identificación de quien recibe la RAP</ion-label>
+          <ion-input required class="identificacion-label" [disabled]="isPendingActa || !estadoActaOptions.canContinue" [(ngModel)]="selectedActa.nombrePersona" name="nombre" placeholder="Nombre"></ion-input>
+          <ion-input required class="identificacion-label" [disabled]="isPendingActa || !estadoActaOptions.canContinue" [(ngModel)]="selectedActa.parentezcoTitular" name="parentesco" placeholder="Parentesco"></ion-input>
+          <ion-input required class="identificacion-label" [disabled]="isPendingActa || !estadoActaOptions.canContinue" [(ngModel)]="selectedActa.tipoIdentificacion" name="tipoIdent" placeholder="Tipo de identificación"></ion-input>
+          <ion-input required class="identificacion-label" [disabled]="isPendingActa || !estadoActaOptions.canContinue" [(ngModel)]="selectedActa.identificacion" name="numeroIdent" placeholder="Numero de clave de indentificación"></ion-input>
+          <ion-input required type="number" class="identificacion-label" [disabled]="isPendingActa || !estadoActaOptions.canContinue" [(ngModel)]="selectedActa.telefonoPersona" name="celular" placeholder="Celular"></ion-input>
+        </ion-item>
+        <ion-grid *ngIf="estadoActaOptions.canContinue || isPendingActa">
+          <ion-row>
+            <ion-col class="label-container">
+              <ion-label>Identificación del cliente</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="!isPendingActa && estadoActaOptions.canContinue">
+            <ion-col>
+              <ion-row>
+                <ion-col (click)="capture(3)"  class="cam-col1">
+                  <ion-icon class="cam-icon" name="camera"></ion-icon>              
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col (click)="capture(3)" class="cam-col2">
+                  <ion-label *ngIf="!imagenIdentificacion">Tomar fotografia de identificación del cliente (Opcional)</ion-label>
+                  <ion-label *ngIf="imagenIdentificacion">Volver a tomar fotografía de identificación del cliente</ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+          <ion-row class="bottom-image-row">
+            <ion-col>
+              <img [src]="imagenIdentificacion" *ngIf="imagenIdentificacion"/>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col class="label-container">
+              <ion-label>Comprobante de inspección firmada</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="!isPendingActa && estadoActaOptions.canContinue">
+            <ion-col>
+              <ion-row>
+                <ion-col (click)="capture(4)" class="cam-col1">
+                  <ion-icon class="cam-icon" name="camera"></ion-icon>              
+                </ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col (click)="capture(4)" class="cam-col2">
+                  <ion-label *ngIf="!imagenComprobanteInspeccion">Hoja de inspección</ion-label>
+                  <ion-label *ngIf="imagenComprobanteInspeccion">Volver a tomar fotografía de Hoja de inspección</ion-label>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <img [src]="imagenComprobanteInspeccion" *ngIf="imagenComprobanteInspeccion"/>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-button *ngIf="!isPendingActa && estadoActaOptions.canContinue" [disabled]="isSendingActa || !isFormValid || !imagenComprobanteInspeccion || !identificacionForm.form.valid" (click)="sendRequest(true)" expand="block" color="primary">Finalizar</ion-button>
+      </form>
+      </ion-card-content>
+    </ion-card>
+    <!-- Fin de Identificación -->
+  </section>

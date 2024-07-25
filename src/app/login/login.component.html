@@ -1,0 +1,43 @@
+<ion-grid>
+  <ion-row>
+    <ion-col class="login-form-container" size="10" offset="1">
+      <ion-row>
+        <ion-col>
+          <ion-item class="login-item">
+            <div class="login-item-content">
+              <ion-label position="floating">
+                <ion-icon class="icon" name="person"></ion-icon>
+                Usuario
+              </ion-label>
+              <ion-input [(ngModel)]="user"></ion-input>
+            </div>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-item class="login-item">
+            <div class="login-item-content">
+              <ion-label position="floating">
+                <ion-icon class="icon" name="lock"></ion-icon>
+                Contraseña
+              </ion-label>
+              <ion-input id="login-password-input" type="password" [(ngModel)]="password"></ion-input>
+              <ion-icon id="login-password-icon" (click)="eyeIconPress()" class="pass-eye-icon" name="eye"></ion-icon>
+            </div>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="reset-password-container">
+          <ion-label class="reset-password-label">¿Olvidaste tu contraseña?</ion-label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button [disabled]="password.length < 3 || user.length < 2" (click)="login()" class="login-btn" expand="block">Iniciar sesion</ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-col>
+  </ion-row>
+</ion-grid>
